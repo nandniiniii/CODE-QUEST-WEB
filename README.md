@@ -44,81 +44,12 @@ CodeQuestArena-Web/
 └── README.md
 ```
 
-## 🔑 Prerequisites
-
-- Node.js 18+ and npm
-- Python 3.10+
-- A free Gemini API key from [Google AI Studio](https://aistudio.google.com/app/apikey)
-
-## ⚙️ Local Setup
-
-### 1. Backend (Flask)
-
-```bash
-cd backend
-python -m venv venv
-venv\Scripts\activate          # Windows
-# source venv/bin/activate     # Mac/Linux
-
-pip install -r requirements.txt
-
-copy .env.example .env         # Windows
-# cp .env.example .env         # Mac/Linux
-```
-
-Open `.env` and paste your real Gemini API key:
-```
-GEMINI_API_KEY=your_actual_key_here
-```
-
-Run the server:
-```bash
-python app.py
-```
-Backend should now be live at `http://localhost:5000`. Test it by visiting `http://localhost:5000/api/health` in your browser — you should see a JSON success message.
-
-### 2. Frontend (React)
-
-Open a **new terminal**, keep the backend running:
-
-```bash
-cd frontend
-npm install
-copy .env.example .env         # Windows
-# cp .env.example .env         # Mac/Linux
-
-npm run dev
-```
-
-Frontend should now be live at `http://localhost:5173`. Open it in your browser — you should see the Code Quest Arena welcome screen.
-
 ## 🤖 How the AI Integration Works
 
 **Dynamic Question Generation** — Every time a question loads, the frontend calls `/api/generate-question` with the chosen category and difficulty. The backend prompts Gemini to write a brand-new question, validates the JSON response (correct answer must match one of the options), and returns it. If Gemini fails or returns something malformed, the backend automatically falls back to a hardcoded question bank so the quiz never breaks.
 
 **CodeBot Tutor** — After answering, players can open the CodeBot chat panel. Each message sent includes the current question's context (the question text, correct answer, and what the student answered) so CodeBot's explanations are always relevant to what's on screen, not generic.
 
-## 🚀 Deployment
-
-### Backend → Render
-
-1. Push this repo to GitHub.
-2. On [Render](https://render.com), create a new **Web Service**, connect your repo, set the root directory to `backend`.
-3. Build command: `pip install -r requirements.txt`
-4. Start command: `gunicorn app:app`
-5. Add environment variable `GEMINI_API_KEY` with your real key in Render's dashboard (never commit it to GitHub).
-6. Deploy — note your live backend URL (something like `https://codequestArena-api.onrender.com`).
-
-### Frontend → Vercel
-
-1. On [Vercel](https://vercel.com), import this repo, set root directory to `frontend`.
-2. Add environment variable `VITE_API_URL` set to your Render backend URL from above.
-3. Deploy.
-4. Optional: rename the Vercel project (Settings → General) to drop the random suffix, or connect a custom domain (Settings → Domains) for a cleaner URL.
-
-## 🔒 Security Note
-
-Never commit `.env` files — both `backend/.env` and `frontend/.env` are already excluded via `.gitignore`. Your Gemini API key should only ever live in your local `.env` file and in Render's environment variable settings, never in code or commit history.
 
 ## 🚧 Future Enhancements
 
